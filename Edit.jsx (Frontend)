@@ -1,0 +1,57 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+
+function Edit() {
+    const [name,setName] = useState("");
+    const [description,setDescription] = useState("");
+    const [price,setPrice] = useState("");
+    const [quantity,setQuantity] = useState("");
+
+    const {id} = useParams();
+    const navigate = useNavigate();
+
+    const getSingleProduct = async() => {
+        const response = await fetch(`http://localhost:3000/show-product/${id}`);
+        const result = await response.json();
+        if(response.ok) {
+            setName(result.name);
+            setDescription(result.description);
+            setPrice(result.price);
+            setQuantity(result.quantity);
+        }
+    }
+
+    const handleUpdate = async(e) => {
+        e.preventDefault();
+        const updatedProduct = {name,description,price,quantity};
+        const response = await fetch(`http://localhost:3000/update-product/${id}`,{
+            method: "PATCH",
+            body: JSON.stringify(updatedProduct),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        if(response.ok){
+            console.log("Updated successfully");
+            navigate("/");         
+        }
+    }
+
+    useEffect(()=> {
+        getSingleProduct();
+    },[])
+
+    return (
+            <form onSubmit={handleUpdate}>
+            <h3>Edit Product</h3>
+            <input type="text" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Product name" required/><br></br><br></br>
+            <input type="text" value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Product description" required/><br></br><br></br>
+            <input type="number" value={price} onChange={(e)=>setPrice(e.target.value)} placeholder="Product price" required/><br></br><br></br>
+            <input type="number" value={quantity} onChange={(e)=>setQuantity(e.target.value)} placeholder="Product quantity" required/><br></br><br></br>
+            <button type="submit" style={{padding:"10px"}}>Update</button>
+    </form>
+    );
+  }
+  
+  export default Edit;
