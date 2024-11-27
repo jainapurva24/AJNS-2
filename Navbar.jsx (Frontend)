@@ -1,0 +1,15 @@
+import { Link } from "react-router-dom";
+
+
+function Navbar() {
+    return(
+        <>
+            <ul style={{listStyle:"none",display:"flex"}}>
+                <li style={{margin:"30px",padding:"20px"}}><Link to='add'>Add</Link></li>
+                <li style={{margin:"30px",padding:"20px"}}><Link to="/">Display</Link></li>
+            </ul>
+        </>
+    )
+}
+
+export default Navbar;
