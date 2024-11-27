@@ -1,0 +1,70 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+
+function View() {
+
+    const [data,setData] = useState([]);
+
+    async function getProduct() {
+        const response = await fetch("http://localhost:3000/show-product");
+        const result = await response.json();
+
+        if(response.ok){
+            setData(result);
+            console.log(result);
+        }
+    }
+
+    const handleDelete = async (id) => {
+        const response = await fetch(`http://localhost:3000/delete-product/${id}`,{
+            method: 'DELETE'
+        });
+
+        if(response.ok){
+            alert("product deleted successfully");
+            getProduct();
+        }
+
+    }
+
+    
+    useEffect(()=>{
+        getProduct();
+    },[])
+
+
+    return(
+        <>
+           <h3>Products List</h3>
+           <table border="1px">
+                <thead>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Quantity Name</th>
+                    <th>Action</th>
+                    <th>Action</th>
+                </thead>
+                
+                
+                <tbody>
+                {data?.map((ele)=> (
+                    <tr key={ele._id}>
+                        <td> {ele.name} </td>
+                        <td> {ele.description} </td>
+                        <td> {ele.price} </td>
+                        <td> {ele.quantity} </td>
+                        <td> <button type="submit" onClick={()=>handleDelete(ele._id)}>Delete</button> </td>
+                        <td> <button type="submit"> <Link to={`/${ele._id}`}> Edit </Link> </button>  </td>
+                    </tr>
+                    ))}
+                </tbody>
+                
+
+           </table>
+        </>
+    )
+}
+
+export default View;
